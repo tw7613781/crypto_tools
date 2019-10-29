@@ -1,0 +1,40 @@
+{
+  "name": "crypto-tools",
+  "version": "0.0.1",
+  "description": "an API server provide some utilities for crypto trade",
+  "main": "server.ts",
+  "scripts": {
+    "build-ts": "tsc",
+    "start": "npm run serve",
+    "serve": "node dist/server.js",
+    "watch-node": "./node_modules/.bin/nodemon dist/server.js",
+    "watch-ts": "tsc -w",
+    "tslint": "./node_modules/.bin/tslint -c ./tslint.json 'src/**/*.ts'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tw7613781/crypto_tools.git"
+  },
+  "keywords": [
+    "typescript",
+    "crypto trade"
+  ],
+  "author": "Max Tang",
+  "license": "Apache License 2.0",
+  "bugs": {
+    "url": "https://github.com/tw7613781/crypto_tools/issues"
+  },
+  "homepage": "https://github.com/tw7613781/crypto_tools#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.4",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.1",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7"
+  }
+}
