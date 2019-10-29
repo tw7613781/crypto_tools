@@ -1,4 +1,4 @@
-import * as request from "request-promise-native";
+import * as request from 'request-promise-native';
 
 export class Bitcoke {
 
