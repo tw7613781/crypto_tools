@@ -15,7 +15,7 @@ In bitcoke, you can use any of above currencies as principal to trade. So the lo
 ```shell
 curl -X POST 52.78.92.80:3000/stop-loss \
 -H 'Content-Type: application/json' \
--H 'Password': 'daxiang' \
+-H 'Password: daxiang' \
 -d '{
      "amount": 200,
      "buyPrice": 9670,
