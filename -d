@@ -1,0 +1,7 @@
+{"status":401,"timestamp":1572357460203,"error":"UNAUTHORIZED","message":"Authentication was invalid."}--_curl_--
+>      "amount": 200
+--_curl_--
+>      "buyPrice": 9670
+--_curl_--
+>      "loss": -0.02
+
