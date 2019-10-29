@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 //      "symbol": "ETHUSD"
 // -----------------------
 // Supported symbol, "ETHUSD", "BTCUSD", "EOSUSD"
-app.get('/stop-loss', async (req, res) => {
+app.post('/stop-loss', async (req, res) => {
     const {symbol, amount, buyPrice, loss, password} = req.body;
     if (amount === undefined || buyPrice === undefined || loss === undefined) {
         return ErrorHandler.invalidParam(res);
