@@ -10,11 +10,11 @@ const bitcoke = new Bitcoke()
 app.use(bodyParser.json())
 
 app.use((req, res, next) => {
-    const { password } = req.headers;
+    const { password } = req.headers
     if (password !== simpleToken) {
-        return ErrorHandler.unauthorized(res);
+        return ErrorHandler.unauthorized(res)
     }
-    next ();
+    next()
 })
 
 // -X POST server:port/stop-loss \
@@ -28,11 +28,11 @@ app.use((req, res, next) => {
 // -----------------------
 // Supported symbol, "ETHUSD", "BTCUSD", "EOSUSD"
 app.post('/stop-loss', async (req, res) => {
-    const {symbol, amount, buyPrice, loss} = req.body;
+    const {symbol, amount, buyPrice, loss} = req.body
     if (amount === undefined || buyPrice === undefined || loss === undefined) {
         return ErrorHandler.invalidParam(res)
     }
-    const symbols = ['BTCUSD', 'ETHUSD', 'EOSUSD'];
+    const symbols = ['BTCUSD', 'ETHUSD', 'EOSUSD']
     if (!symbols.includes(symbol)) {
         return ErrorHandler.invalidParam(res)
     }
