@@ -1,13 +1,13 @@
-import * as bodyParser from 'body-parser';
-import express from 'express';
-import { Bitcoke } from './bitcoke';
-import { ErrorHandler } from './errorHandler';
+import * as bodyParser from 'body-parser'
+import express from 'express'
+import { Bitcoke } from './bitcoke'
+import { ErrorHandler } from './errorHandler'
 
-const app = express();
-const simpleToken = 'daxiang';
-const bitcoke = new Bitcoke();
+const app = express()
+const simpleToken = 'daxiang'
+const bitcoke = new Bitcoke()
 
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 
 app.use((req, res, next) => {
     const { password } = req.headers;
@@ -30,20 +30,20 @@ app.use((req, res, next) => {
 app.post('/stop-loss', async (req, res) => {
     const {symbol, amount, buyPrice, loss} = req.body;
     if (amount === undefined || buyPrice === undefined || loss === undefined) {
-        return ErrorHandler.invalidParam(res);
+        return ErrorHandler.invalidParam(res)
     }
     const symbols = ['BTCUSD', 'ETHUSD', 'EOSUSD'];
     if (!symbols.includes(symbol)) {
-        return ErrorHandler.invalidParam(res);
+        return ErrorHandler.invalidParam(res)
     }
     try {
-        const price = await bitcoke.getPrice(symbol);
-        const stopLossPrice = (price * loss) / (amount / buyPrice) + buyPrice;
-        return res.json({stopLossPrice});
+        const price = await bitcoke.getPrice(symbol)
+        const stopLossPrice = (price * loss) / (amount / buyPrice) + buyPrice
+        return res.json({stopLossPrice})
     } catch (err) {
-        console.log(`Error getting Price from Bitcoke: ${err}`);
-        return ErrorHandler.serviceError(res);
+        console.log(`Error getting Price from Bitcoke: ${err}`)
+        return ErrorHandler.serviceError(res)
     }
-});
+})
 
-app.listen(3000, () => console.log('Server listening on port 3000!'));
+app.listen(3000, () => console.log('Server listening on port 3000!'))
