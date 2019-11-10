@@ -10,17 +10,11 @@ export class HTMLCrawler {
 
     private taskQ: string[] = []
     private visited: string[] = []
-    private jobQ: IJob[] = []
     private target: string
     private baseURL: string
 
     constructor() {
-        setInterval(() => {
-            this.crawler()
-        }, this.taskQ.length === 0 ? 1000 * 5 : 1)
-        setInterval(() => {
-            this.parser()
-        }, this.jobQ.length === 0 ? 1000 * 5 : 1)
+
     }
 
     // task is a url string
@@ -30,11 +24,11 @@ export class HTMLCrawler {
 
     private crawler() {
         if (this.taskQ === undefined || this.taskQ.length === 0) {
-            logger.warn('No task in taskQ')
+            logger.warn('Finish All Tasks')
         } else {
             try {
                 const task = this.taskQ.shift()
-                logger.info(`Starting to crawl ${task}`)
+                logger.info(`Starting to crawl task: ${task}`)
                 const options = {
                     headers: {
                         'Host': 'www.pdflibr.com',
@@ -58,6 +52,30 @@ export class HTMLCrawler {
                 logger.error(err)
             }
         }
+    }
+
+    private getPAGE(urlString:string) {
+        return new Promise((resolve, reject) => {
+            const urlMore = new URL(urlString)
+            const options = {
+                headers: {
+                    'Host': urlMore.host,
+                    'User-Agent': 'request',
+                },
+                url: urlMore.href,     
+            }
+            request(options, (err, res, body) => {
+                if (err) {
+                    reject(err)
+                }
+                if (res && res.statusCode === 200) {
+                    this.visited.push(urlMore.href)
+                    resolve(body)
+                } else {
+                    reject(`response status is ${res.statusCode}`)
+                }
+            })
+        })
     }
 
     private parser() {
