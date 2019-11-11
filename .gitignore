@@ -65,3 +65,5 @@ dist/
 
 # mac filesystem
 .DS_Store
+
+*.db
