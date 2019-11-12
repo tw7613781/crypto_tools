@@ -65,10 +65,13 @@ if (params === '-i') {
     const pdflibrCrawler = new PdflibrCrawler('https://www.pdflibr.com/?page=1')
     pdflibrCrawler.start(0)
 } else if (params === '-m') {
-    setTimeout(() => {
-        const pdflibrCrawler = new PdflibrCrawler('https://www.pdflibr.com/?page=1')
+    const pdflibrCrawler = new PdflibrCrawler('https://www.pdflibr.com/?page=1')
+    setImmediate(() => {
         pdflibrCrawler.start(1)
-    }, 1000 * 60)
+    })
+    setTimeout(() => {
+        pdflibrCrawler.start(1)
+    }, 1000 * 60 * 60)
 } else {
     logger.error('Params are incorrect.')
     logger.info('-i: initila database with current data')
