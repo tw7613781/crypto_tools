@@ -68,7 +68,7 @@ if (params === '-i') {
     setTimeout(() => {
         const pdflibrCrawler = new PdflibrCrawler('https://www.pdflibr.com/?page=1')
         pdflibrCrawler.start(1)
-    }, 1000 * 10)
+    }, 1000 * 60)
 } else {
     logger.error('Params are incorrect.')
     logger.info('-i: initila database with current data')
