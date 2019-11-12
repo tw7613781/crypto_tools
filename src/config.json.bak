@@ -1,0 +1,10 @@
+{
+    "mailer": {
+        "mailer_host": "smtp.163.com",
+        "mailer_port": 25,
+        "mailer_user": "",
+        "mailer_pass": "",
+        "mailer_from": "tw7613781@163.com",
+        "mailer_to": ["tw7613781@gmail.com"]
+    }
+}

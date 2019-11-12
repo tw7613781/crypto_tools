@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose()
 const { log4js } = require('./utils')
 
-const logger = log4js.getLogger('table')
+const logger = log4js.getLogger(__filename)
 
 export class Table {
 
@@ -43,9 +43,10 @@ export class Table {
                 if (e) {
                     logger.error(`insert table ${this.table} error`)
                     reject(e)
+                } else {
+                    logger.debug(`${phoneNumber} saved`)
+                    resolve()
                 }
-                logger.info(`${phoneNumber} saved`)
-                resolve()
             })
         })
     }
@@ -59,11 +60,15 @@ export class Table {
             this.db.all(sql, params, (e, rows) => {
                 if (e) {
                     reject(e)
+                    return
                 }
                 if (rows.length === 0) {
+                    logger.debug(`Cannot found the number ${phoneNumber}`)
                     resolve(false)
+                } else {
+                    logger.debug(`Found the number ${phoneNumber}`)
+                    resolve(true)
                 }
-                resolve(true)
             })
         })
     }

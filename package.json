@@ -9,7 +9,12 @@
     "serve": "node dist/server.js",
     "watch-node": "./node_modules/.bin/nodemon dist/server.js",
     "watch-ts": "tsc -w",
-    "tslint": "./node_modules/.bin/tslint -c ./tslint.json 'src/**/*.ts'"
+    "tslint": "./node_modules/.bin/tslint -c ./tslint.json 'src/**/*.ts'",
+    "yinsiduanxin:init": "./node_modules/.bin/ts-node src/crawler/yinsiduanxin.ts -i",
+    "yinsiduanxin:monitor": "./node_modules/.bin/ts-node src/crawler/yinsiduanxin.ts -m",
+    "pdflibr:init": "./node_modules/.bin/ts-node src/crawler/pdflibr.ts -i",
+    "pdflibr:monitor": "./node_modules/.bin/ts-node src/crawler/pdflibr.ts -m",
+    "clear": "rm -f *.db"
   },
   "repository": {
     "type": "git",
@@ -39,6 +44,7 @@
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
     "log4js": "^5.3.0",
+    "nodemailer": "^6.3.1",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "sqlite3": "^4.1.0"
