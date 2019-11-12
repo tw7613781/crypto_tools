@@ -33,9 +33,12 @@ export abstract class BaseCrawler {
                 this.crawler()
             }, 1000)
         } else if (mode === 1) {
+            setImmediate(() => {
+                this.crawler()
+            })
             setInterval(() => {
                 this.crawler()
-            }, 1000 * 60 * 2 )
+            }, 1000 * 60 * 60 )
         } else {
             // pass
         }

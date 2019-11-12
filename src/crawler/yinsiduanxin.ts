@@ -63,10 +63,8 @@ if (params === '-i') {
     const yingsiduanxinCrawler = new YingsiduanxinCrawler('https://www.yinsiduanxin.com/dl/1')
     yingsiduanxinCrawler.start(0)
 } else if (params === '-m') {
-    setTimeout(() => {
-        const yingsiduanxinCrawler = new YingsiduanxinCrawler('https://www.yinsiduanxin.com/dl/1')
-        yingsiduanxinCrawler.start(1)
-    }, 1000 * 10)
+    const yingsiduanxinCrawler = new YingsiduanxinCrawler('https://www.yinsiduanxin.com/dl/1')
+    yingsiduanxinCrawler.start(1)
 } else {
     logger.error('Params are incorrect.')
     logger.info('-i: initila database with current data')

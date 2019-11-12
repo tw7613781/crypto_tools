@@ -14,7 +14,7 @@ log4js.configure({
         },
     },
     categories: {
-        default: { appenders: ['console', 'file'], level: 'debug' },
+        default: { appenders: ['console', 'file'], level: 'info' },
     },
 })
 
