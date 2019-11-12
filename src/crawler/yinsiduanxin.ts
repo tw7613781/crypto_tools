@@ -69,7 +69,7 @@ if (params === '-i') {
     })
     setInterval(() => {
         yingsiduanxinCrawler.start(1)
-    }, 1000 * 60 * 60)
+    }, 1000 * 60 * 60 * 2)
 } else {
     logger.error('Params are incorrect.')
     logger.info('-i: initila database with current data')
