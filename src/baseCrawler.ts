@@ -69,8 +69,6 @@ export abstract class BaseCrawler {
                     'Host': urlMore.host,
                     'User-Agent': 'request',
                 },
-                jar: true,
-                maxRedirects: 25,
                 url: urlMore.href,
             }
             request(options, (err, res, body) => {
