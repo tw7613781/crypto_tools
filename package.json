@@ -14,6 +14,7 @@
     "yinsiduanxin:monitor": "./node_modules/.bin/ts-node src/crawler/yinsiduanxin.ts -m",
     "pdflibr:init": "./node_modules/.bin/ts-node src/crawler/pdflibr.ts -i",
     "pdflibr:monitor": "./node_modules/.bin/ts-node src/crawler/pdflibr.ts -m",
+    "api_server:start": "./node_modules/.bin/ts-node src/server.ts",
     "clear": "rm -f *.db"
   },
   "repository": {
