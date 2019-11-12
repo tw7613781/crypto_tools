@@ -68,6 +68,7 @@ export abstract class BaseCrawler {
                 headers: {
                     'Host': urlMore.host,
                     'User-Agent': 'request',
+                    'jar': true
                 },
                 url: urlMore.href,
             }
