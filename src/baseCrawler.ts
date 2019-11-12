@@ -28,20 +28,9 @@ export abstract class BaseCrawler {
         this.taskQ = []
         this.taskQ.push(this.urlOrigin.href)
         logger.info(`Starting to crawler ${this.urlOrigin.href}`)
-        if (mode === 0) {
-            setTimeout(() => {
-                this.crawler()
-            }, 1000)
-        } else if (mode === 1) {
-            setImmediate(() => {
-                this.crawler()
-            })
-            setInterval(() => {
-                this.crawler()
-            }, 1000 * 60 * 60 )
-        } else {
-            // pass
-        }
+        setTimeout(() => {
+            this.crawler()
+        }, 1000)
     }
 
     protected abstract async parser(task: string, page: string): Promise<void>
