@@ -79,7 +79,11 @@ export abstract class BaseCrawler {
                     this.visited.push(urlMore.href)
                     resolve(body)
                 } else {
-                    reject(`response status is not 200 and res is ${res}`)
+                    if (res) {
+                        reject(`response status is not 200 and res is ${res.statusCode}`)
+                    } else {
+                        reject(`fail without res object`)
+                    }
                 }
             })
         })
