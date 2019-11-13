@@ -3,7 +3,7 @@ import { Mailer } from './mailer'
 import { Table } from './table'
 import { log4js } from './utils'
 
-const { http, https } = require('follow-redirects')
+const puppeteer = require('puppeteer')
 const logger = log4js.getLogger(__filename)
 
 export abstract class BaseCrawler {
@@ -13,6 +13,8 @@ export abstract class BaseCrawler {
     protected visited: string[]
     protected table: Table
     protected mailer: Mailer
+    protected browser: any
+    protected page: any
 
     constructor(url) {
         this.urlOrigin = new URL(url)
@@ -22,7 +24,9 @@ export abstract class BaseCrawler {
         this.mailer = new Mailer()
     }
 
-    public start(mode) {
+    public async start(mode) {
+        this.browser = await puppeteer.launch({ headless: true })
+        this.page = await this.browser.newPage()
         this.mode = mode
         this.visited = []
         this.taskQ = []
@@ -37,6 +41,7 @@ export abstract class BaseCrawler {
 
     private async crawler() {
         if (this.taskQ === undefined || this.taskQ.length === 0) {
+            await this.browser.close()
             logger.info('Finish All Tasks')
         } else {
             try {
@@ -44,7 +49,6 @@ export abstract class BaseCrawler {
                 if (this.visited.includes(task)) {
                     logger.debug(`${task} has been visited, jump the task`)
                     await this.crawler()
-
                 } else {
                     logger.debug(`Starting to crawl task: ${task}`)
                     const page = await this.getPAGE(task)
@@ -61,46 +65,14 @@ export abstract class BaseCrawler {
         }
     }
 
-    private getPAGE(urlString: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const urlMore = new URL(urlString)
-            const service = urlMore.protocol === 'https:' ? https : http
-            try {
-                const options = {
-                    headers: {
-                        'Host': urlMore.host,
-                        'User-Agent': 'request',
-                    },
-                    hostname: urlMore.hostname,
-                    path: urlMore.pathname + urlMore.search,
-                    port: 443,
-                }
-                const req = service.get(options, (res) => {
-                    let body = ''
-                    res.on('data', (chunk) => {
-                        body += chunk
-                    })
-                    res.on('end', () => {
-                        logger.info(body)
-                        if (res && res.statusCode === 200) {
-                            this.visited.push(urlMore.href)
-                            resolve(body)
-                        } else {
-                            if (res) {
-                                reject(`response status is not 200 but ${res.statusCode}`)
-                            } else {
-                                reject(`fail without res object`)
-                            }
-                        }
-                    })
-                })
-                req.on('error', ( e ) => {
-                    reject(e)
-                })
-            } catch (e) {
-                logger.error(e)
-                throw e
-            }
-        })
+    private async getPAGE(urlString: string): Promise<string> {
+        try {
+            await this.page.goto(urlString)
+            this.visited.push(urlString)
+            return await this.page.content()
+        } catch (e) {
+            logger.error(e)
+            throw e
+        }
     }
 }
