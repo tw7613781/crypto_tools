@@ -3,7 +3,7 @@ import { Mailer } from './mailer'
 import { Table } from './table'
 import { log4js } from './utils'
 
-const request = require('request')
+const { http, https } = require('follow-redirects')
 const logger = log4js.getLogger(__filename)
 
 export abstract class BaseCrawler {
@@ -64,28 +64,43 @@ export abstract class BaseCrawler {
     private getPAGE(urlString: string): Promise<string> {
         return new Promise((resolve, reject) => {
             const urlMore = new URL(urlString)
-            const options = {
-                headers: {
-                    'Host': urlMore.host,
-                    'User-Agent': 'request',
-                },
-                url: urlMore.href,
+            const service = urlMore.protocol === 'https:' ? https : http
+            try {
+                const options = {
+                    headers: {
+                        'Host': urlMore.host,
+                        'User-Agent': 'request',
+                    },
+                    hostname: urlMore.hostname,
+                    path: urlMore.pathname + urlMore.search,
+                    port: 443,
+                }
+                const req = service.get(options, (res) => {
+                    let body = ''
+                    res.on('data', (chunk) => {
+                        body += chunk
+                    })
+                    res.on('end', () => {
+                        logger.info(body)
+                        if (res && res.statusCode === 200) {
+                            this.visited.push(urlMore.href)
+                            resolve(body)
+                        } else {
+                            if (res) {
+                                reject(`response status is not 200 but ${res.statusCode}`)
+                            } else {
+                                reject(`fail without res object`)
+                            }
+                        }
+                    })
+                })
+                req.on('error', ( e ) => {
+                    reject(e)
+                })
+            } catch (e) {
+                logger.error(e)
+                throw e
             }
-            request(options, (err, res, body) => {
-                if (err) {
-                    reject(err)
-                }
-                if (res && res.statusCode === 200) {
-                    this.visited.push(urlMore.href)
-                    resolve(body)
-                } else {
-                    if (res) {
-                        reject(`response status is not 200 and res is ${res.statusCode}`)
-                    } else {
-                        reject(`fail without res object`)
-                    }
-                }
-            })
         })
     }
 }
