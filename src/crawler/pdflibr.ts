@@ -31,9 +31,10 @@ export class PdflibrCrawler extends BaseCrawler {
                                     logger.debug('Exist in DB')
                                 } else {
                                     logger.info(`New phone number ${phoneNumber} found, Notifing`)
-                                    const fullURL = task
-                                    const subject = `New number: ${phoneNumber}`
-                                    this.mailer.sendMail(subject, fullURL)
+                                    const page = task.split('?')[1]
+                                    const info = `Got a message from pdflibr, phone number is :${phoneNumber}, page number: ${page}`
+                                    const subject = `New phone number: ${phoneNumber}`
+                                    this.mailer.sendMail(subject, info)
                                     await this.table.insert(Date.now(), phoneNumber)
                                 }
                             } else {
@@ -71,7 +72,7 @@ if (params === '-i') {
     })
     setInterval(() => {
         pdflibrCrawler.start(1)
-    }, 1000 * 60 * 60 * 2)
+    }, 1000 * 60 * 60 * 4)
 } else {
     logger.error('Params are incorrect.')
     logger.info('-i: initila database with current data')

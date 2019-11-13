@@ -30,9 +30,9 @@ export class YingsiduanxinCrawler extends BaseCrawler {
                                     logger.debug('Exist in DB')
                                 } else {
                                     logger.info(`New phone number ${num} found, Notifing`)
-                                    const fullURL = `${this.urlOrigin.origin}/message/${num}.html`
-                                    const subject = `New number: ${num}`
-                                    this.mailer.sendMail(subject, fullURL)
+                                    const info = `Got a message from yinsiduanxin, phone number is :${num}`
+                                    const subject = `New phone number: ${num}`
+                                    this.mailer.sendMail(subject, info)
                                     await this.table.insert(Date.now(), num)
                                 }
                             } else {
@@ -69,7 +69,7 @@ if (params === '-i') {
     })
     setInterval(() => {
         yingsiduanxinCrawler.start(1)
-    }, 1000 * 60 * 60 * 2)
+    }, 1000 * 60 * 60 * 4)
 } else {
     logger.error('Params are incorrect.')
     logger.info('-i: initila database with current data')
