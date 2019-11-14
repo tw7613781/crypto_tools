@@ -26,8 +26,10 @@ export abstract class BaseCrawler {
 
     public async start(mode) {
         this.browser = await puppeteer.launch({
-            args: ['--no-sandbox'],
-            headless: true,
+            args: [
+                '--no-sandbox',
+                '--proxy-server=157.245.62.255:8080',
+            ]
         })
         this.page = await this.browser.newPage()
         this.mode = mode
@@ -72,12 +74,7 @@ export abstract class BaseCrawler {
         try {
             await this.page.goto(urlString, { waitUntil: 'networkidle0' })
             this.visited.push(urlString)
-            const temp = await this.page.content()
-            if (this.page.title() === 'Redirecting...') {
-                logger.info('got redirecting page')
-            }
-            logger.info(temp)
-            return temp
+            return await this.page.content()
         } catch (e) {
             throw e
         }
