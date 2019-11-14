@@ -25,7 +25,10 @@ export abstract class BaseCrawler {
     }
 
     public async start(mode) {
-        this.browser = await puppeteer.launch({ headless: true })
+        this.browser = await puppeteer.launch({
+            args: ['--no-sandbox'],
+            headless: true,
+        })
         this.page = await this.browser.newPage()
         this.mode = mode
         this.visited = []
