@@ -70,11 +70,15 @@ export abstract class BaseCrawler {
 
     private async getPAGE(urlString: string): Promise<string> {
         try {
-            await this.page.goto(urlString)
+            await this.page.goto(urlString, { waitUntil: 'networkidle0' })
             this.visited.push(urlString)
-            return await this.page.content()
+            const temp = await this.page.content()
+            if (this.page.title() === 'Redirecting...') {
+                logger.info('got redirecting page')
+            }
+            logger.info(temp)
+            return temp
         } catch (e) {
-            logger.error(e)
             throw e
         }
     }
