@@ -28,8 +28,7 @@ export abstract class BaseCrawler {
         this.browser = await puppeteer.launch({
             args: [
                 '--no-sandbox',
-                '--proxy-server=157.245.62.255:8080',
-            ]
+            ],
         })
         this.page = await this.browser.newPage()
         this.mode = mode
