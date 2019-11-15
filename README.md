@@ -24,6 +24,19 @@ curl -X POST 52.78.92.80:3000/stop-loss \
      }'
 ```
 
+## Calculate loss or win
+
+```shell
+-X POST server:port/loss \
+-H 'Content-Type: application/json' \
+-H 'Password': 'daxiang' \
+-d '{
+     "amount": 200,
+     "buyPrice": 9670,
+     "sellPrice": 9900,
+     "symbol": "ETHUSD"
+```
+
 ## Demo server
 
-http://52.78.92.80:3000
+http://13.209.22.173:3000

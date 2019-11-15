@@ -39,7 +39,36 @@ app.post('/stop-loss', async (req, res) => {
     try {
         const price = await bitcoke.getPrice(symbol)
         const stopLossPrice = (price * loss) / (amount / buyPrice) + buyPrice
-        return res.json({stopLossPrice})
+        return res.json(stopLossPrice)
+    } catch (err) {
+        console.log(`Error getting Price from Bitcoke: ${err}`)
+        return ErrorHandler.serviceError(res)
+    }
+})
+
+// -X POST server:port/loss \
+// -H 'Content-Type: application/json' \
+// -H 'Password': 'daxiang' \
+// -d '{
+//      "amount": 200,
+//      "buyPrice": 9670,
+//      "sellPrice": 9900,
+//      "symbol": "ETHUSD"
+// -----------------------
+// Supported symbol, "ETHUSD", "BTCUSD", "EOSUSD"
+app.post('/loss', async (req, res) => {
+    const {symbol, amount, buyPrice, sellPrice} = req.body
+    if (amount === undefined || buyPrice === undefined || sellPrice === undefined) {
+        return ErrorHandler.invalidParam(res)
+    }
+    const symbols = ['BTCUSD', 'ETHUSD', 'EOSUSD']
+    if (!symbols.includes(symbol)) {
+        return ErrorHandler.invalidParam(res)
+    }
+    try {
+        const price = await bitcoke.getPrice(symbol)
+        const loss = ( (sellPrice - buyPrice) * ( amount / buyPrice ) ) / price
+        return res.json(loss)
     } catch (err) {
         console.log(`Error getting Price from Bitcoke: ${err}`)
         return ErrorHandler.serviceError(res)
