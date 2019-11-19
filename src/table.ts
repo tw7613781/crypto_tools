@@ -19,8 +19,8 @@ export class Table {
         })
         this.db.serialize(() => {
             this.db.run(`CREATE TABLE IF NOT EXISTS ${this.table}(
-                timestamp text NOT NULL PRIMARY KEY,
-                phoneNumber text)`, ( err ) => {
+                timestamp text NOT NULL,
+                phoneNumber text NOT NULL)`, ( err ) => {
                 if (err) {
                     logger.error(err)
                 } else {
@@ -42,7 +42,7 @@ export class Table {
             this.db.run(sql, params, (e) => {
                 if (e) {
                     logger.error(`insert table ${this.table} error`)
-                    reject(e)
+                    resolve(e)
                 } else {
                     logger.debug(`${phoneNumber} saved`)
                     resolve()
@@ -59,7 +59,7 @@ export class Table {
             }
             this.db.all(sql, params, (e, rows) => {
                 if (e) {
-                    reject(e)
+                    resolve(false)
                     return
                 }
                 if (rows.length === 0) {
