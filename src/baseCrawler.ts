@@ -13,6 +13,7 @@ export abstract class BaseCrawler {
     protected visited: string[]
     protected table: Table
     protected mailer: Mailer
+    protected count: number
 
     constructor(url) {
         this.urlOrigin = new URL(url)
@@ -20,9 +21,11 @@ export abstract class BaseCrawler {
         this.visited = []
         this.table = new Table(this.urlOrigin.host.split('.')[1])
         this.mailer = new Mailer()
+        this.count = 0
     }
 
     public async start(mode) {
+        this.count = 0
         this.mode = mode
         this.visited = []
         this.taskQ = []
@@ -39,8 +42,8 @@ export abstract class BaseCrawler {
         if (this.taskQ === undefined || this.taskQ.length === 0) {
             logger.info('Finish All Tasks')
         } else {
+            const task = this.taskQ.shift()
             try {
-                const task = this.taskQ.shift()
                 if (this.visited.includes(task)) {
                     logger.debug(`${task} has been visited, jump the task`)
                     await this.crawler()
@@ -49,13 +52,29 @@ export abstract class BaseCrawler {
                     const page = await this.getPAGE(task)
                     logger.debug(`Got page successfully, parsing`)
                     await this.parser(task, page)
+                    this.count = 0
+                    const time =  new Date(Date.now()).getSeconds() / 2
+                    logger.info(`Next crawl will happen at ${time} seconds late`)
                     setTimeout(() => {
                         this.crawler()
-                    }, 1000 * 10)
+                    }, 1000 * time)
                 }
             } catch (err) {
-                logger.error(`Failed for the task`)
+                this.count += 1
                 logger.error(err)
+                if (this.count === 10) {
+                    logger.error(`Failed ${this.count} times, stop the task`)
+                } else {
+                    const time =  new Date(Date.now()).getSeconds() / 2
+                    logger.error(`Retry ${this.count} times will happend ${time} seconds late`)
+                    await new Promise( (resolve, reject) => {
+                        setTimeout(async () => {
+                            this.taskQ.push(task)
+                            await this.crawler()
+                            resolve()
+                        }, 1000 * time)
+                    })
+                }
             }
         }
     }
