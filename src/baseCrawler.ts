@@ -51,7 +51,7 @@ export abstract class BaseCrawler {
                     await this.parser(task, page)
                     setTimeout(() => {
                         this.crawler()
-                    }, 1000)
+                    }, 1000 * 10)
                 }
             } catch (err) {
                 logger.error(`Failed for the task`)
@@ -82,9 +82,9 @@ export abstract class BaseCrawler {
                     }
                     if (res && res.statusCode >= 300 && res.statusCode < 400) {
                         const location = res.headers.location
-                        logger.info(location)
+                        logger.info(`Found redirection ${location}`)
                         const newPage = this.urlOrigin.hostname + location
-                        logger.info(newPage)
+                        logger.info(`Found full path of redirection ${newPage}`)
                         if (!this.visited.includes(newPage)) {
                             logger.debug(`Found new task ${newPage}, push the taskQ`)
                             this.taskQ.push(newPage)
