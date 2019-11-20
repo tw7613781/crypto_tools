@@ -50,15 +50,25 @@ export class Mailer {
             </html>
             `
 
-            // send mail with defined transport object
-            const info = await this.transporter.sendMail({
-                from: `"Phone Number Updates Notification" <${config.mailer.mailer_from}>`, // sender address
-                html: htmlBody, // html body
-                subject, // Subject line
-                to: config.mailer.mailer_to, // list of receivers
+            const time =  new Date(Date.now()).getSeconds()
+            logger.info(`${subject}: sending will happen ${time} seconds late`)
+            await new Promise( (resolve, reject) => {
+                setTimeout(async () => {
+                    // send mail with defined transport object
+                    try {
+                        const info = await this.transporter.sendMail({
+                            from: `"Phone Number Updates Notification" <${config.mailer.mailer_from}>`,
+                            html: htmlBody, // html body
+                            subject, // Subject line
+                            to: config.mailer.mailer_to, // list of receivers
+                        })
+                        logger.info(`Message ${subject} sent: ${info.messageId}`)
+                        resolve()
+                    } catch (e) {
+                        reject(e)
+                    }
+                }, 1000 * time)
             })
-
-            logger.info(`Message ${subject} sent: ${info.messageId}`)
             this.count = 0
             // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
         } catch (e) {
